@@ -5,7 +5,7 @@ import RangeSlider from 'react-bootstrap-range-slider';
 export default function ContentModal(props) {
  const {handleClose,handleSave} = props;
  console.log("props",props)
- const [score,setScore] = useState(props.selectedItm?.score||"");
+ const [score,setScore] = useState(props.selectedItm?.score||0);
  const [classname,setClassname] = useState(props.selectedItm?.classname||"A");
  const [name,setName] = useState(props.selectedItm?.name||"");
  
@@ -24,7 +24,7 @@ export default function ContentModal(props) {
         <Form.Control type="text" placeholder="Enter Name" value={name} onChange={(val)=>{setName(val.target.value)}}/>
       </FloatingLabel>
       <Form.Label>Score</Form.Label>
-      <RangeSlider value={score}
+      <RangeSlider value={score} tooltip={"on"}
       onChange={changeEvent => setScore(changeEvent.target.value)}
       />
       {/* <FloatingLabel controlId="floatingInput" label="Enter Score" className="mb-3">
