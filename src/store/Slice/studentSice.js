@@ -12,9 +12,13 @@ const studentSlice = createSlice({
   initialState,
   reducers: {
     onEdit(state, action) {
-      const { id, name, score,classname} = action.payload;
-      const existingItem = state.find((student) => student.id === id);
-      return {...existingItem,...{ id, name, score,classname}}
+      const { id, name, score,classname} = action.payload;    
+      const updatedArray = state.map((student)=>{
+        if(student.id===id) {return { id, name, score,classname}}else{
+        return student
+      } });
+
+      return updatedArray
     },
     onDelete(state,action) {
       const {id} = action.payload;
@@ -22,9 +26,9 @@ const studentSlice = createSlice({
       return  remainingItem
     },
     onAdd(state,action) {
-      const { id, name, score,classname} = action.payload;
-      let obj ={...{ id: state.length + 1, name: "", score: "",classname:""},...{ id, name, score,classname}}
-      return  state.push(obj);
+      const {name, score,classname} = action.payload;
+      state.push({ id: state.length + 1, name, score,classname});
+      return  state;
     },
   },
 });

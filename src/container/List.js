@@ -8,17 +8,38 @@ export default function List() {
   const dispatch = useDispatch();
   const students = useSelector((state) =>  state.students);
   const [show, setShow] = useState(false);
+  const [isEdit,setEdit] = useState(false);
+  const [selectedItm,setSelectedItm] = useState(null);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const doEdit=(itm)=>{
-    console.log(itm)
+  const handleShow = (itm) => {
+    if(itm){
+      setSelectedItm(itm);
+      setEdit(true);}
+    else{
+      setEdit(false)
+    }
+    setShow(true);
+  }
+  const doEdit=(payload)=>{
+    let obj ={...selectedItm,...payload}
+    console.log("payload",obj)
+   dispatch(onEdit(obj))
   }
   const doDelete=(itm)=>{
     dispatch(onDelete({id:itm.id}))
   }
   const doAdd=(payload)=>{
-    dispatch(onAdd(...payload))
+    dispatch(onAdd(payload));
+   
+  }
+  const handleSave =(payload)=>{
+    if(isEdit){
+      doEdit(payload);
+    }else{
+      doAdd(payload);
+    }
+    handleClose();
   }
 return (<>
  <Navbar  bg="light" variant="">
@@ -37,14 +58,14 @@ return (<>
    </tr>
   </thead>
   <tbody>
-  {students && students.map(list=>(
+  {students && students?.map(list=>(
    <tr key={list.id}>
     <td>{list.name}</td>
     <td> {list.score}
     </td>
-    <td> {list.class}
+    <td> {list.classname}
     </td>
-    <td><span onClick={()=>{doEdit(list)}}>Edit</span>
+    <td><span onClick={()=>{handleShow(list)}}>Edit</span>
     <span onClick={()=>{doDelete(list)}}>Delete</span></td>
    </tr>
   ))}
@@ -52,7 +73,7 @@ return (<>
  
  </Table>
  {show && 
- <ContentModal handleClose={handleClose} handleSave={(payload)=>{doAdd(payload)}}/>}
+ <ContentModal isEdit={isEdit} handleClose={handleClose} selectedItm={selectedItm} handleSave={(payload)=>{handleSave(payload)}}/>}
  </>
   )
 }
